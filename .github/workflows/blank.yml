@@ -1,0 +1,51 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Build RPM packages
+        run: |
+          mkdir -p ${{ github.workspace }}/build/RPMS
+          echo "1" > ${{ github.workspace }}/build/RPMS/1.0.6-1_rhel_9.x86_64.rpm
+          echo "2" > ${{ github.workspace }}/build/RPMS/1.0.6-1_debug_rhel_9.x86_64.rpm
+
+      - name: Build DEB packages
+        run: |
+          mkdir -p ${{ github.workspace }}/build/DEBS
+          echo "1" > ${{ github.workspace }}/build/DEBS/1.0.6-1_ubuntu_22_4.x86_64.deb
+          echo "2" > ${{ github.workspace }}/build/DEBS/1.0.6-1_debug_ubuntu_22_4.x86_64.deb
+
+      - name: List all generated files
+        run: |
+          find ${{ github.workspace }}/build/RPMS ${{ github.workspace }}/build/DEBS -type f
+
+      - name: Select packages based on condition
+        run: |
+          # Find files that do not have _debu_ in their name
+          files=$(find ${{ github.workspace }}/build/RPMS ${{ github.workspace }}/build/DEBS -type f | grep -v '_debug_')
+          tar -czvf selected_packages.tar.gz $selected_files
+          
+      - name: Upload archive as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: selected-packages
+          path: selected_packages.tar.gz
