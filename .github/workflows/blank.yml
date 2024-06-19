@@ -43,10 +43,10 @@ jobs:
           cp $rpm_files ${{ github.workspace }}/tmpSelectedPackages/
           cp $deb_files ${{ github.workspace }}/tmpSelectedPackages/
           files=$(ls ${{ github.workspace }}/tmpSelectedPackages/)
-          tar -czvf selected_packages.tar.gz -C ${{ github.workspace }}/tmpSelectedPackages $files
+          tar -czvf ${{ github.workspace }}/threatlocker.tar.gz -C ${{ github.workspace }}/tmpSelectedPackages $files
           
       - name: Upload archive as artifact
         uses: actions/upload-artifact@v2
         with:
           name: selected-packages
-          path: selected_packages.tar.gz
+          path: ${{ github.workspace }}/threatlocker.tar.gz
