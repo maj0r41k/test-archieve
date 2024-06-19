@@ -42,7 +42,7 @@ jobs:
         run: |
           # Find files that do not have _debug_ in their name
           files=$(find ${{ github.workspace }}/build/RPMS ${{ github.workspace }}/build/DEBS -type f | grep -v '_debug_')
-          tar -czvf selected_packages.tar.gz $files
+          tar -czvf selected_packages.tar.gz -T $files
           
       - name: Upload archive as artifact
         uses: actions/upload-artifact@v2
