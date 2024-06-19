@@ -42,6 +42,7 @@ jobs:
           mkdir -p ${{ github.workspace }}/tmpSelectedPackages
           cp $rpm_files ${{ github.workspace }}/tmpSelectedPackages/
           cp $deb_files ${{ github.workspace }}/tmpSelectedPackages/
+          ls ${{ github.workspace }}/tmpSelectedPackages/
 
           tar -czvf selected_packages.tar.gz -C ${{ github.workspace }}/tmpSelectedPackages 
           
