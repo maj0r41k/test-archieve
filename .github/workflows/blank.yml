@@ -44,7 +44,7 @@ jobs:
           cp $deb_files ${{ github.workspace }}/tmpSelectedPackages/
           ls ${{ github.workspace }}/tmpSelectedPackages/
 
-          tar -czvf selected_packages.tar.gz -C ${{ github.workspace }}/tmpSelectedPackages .
+          tar -czvf selected_packages.tar.gz -C ${{ github.workspace }}/tmpSelectedPackages *
           
       - name: Upload archive as artifact
         uses: actions/upload-artifact@v2
