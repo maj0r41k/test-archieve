@@ -34,15 +34,16 @@ jobs:
           echo "1" > ${{ github.workspace }}/build/DEBS/1.0.6-1_ubuntu_22_4.x86_64.deb
           echo "2" > ${{ github.workspace }}/build/DEBS/1.0.6-1_debug_ubuntu_22_4.x86_64.deb
 
-      - name: List all generated files
-        run: |
-          find ${{ github.workspace }}/build/RPMS ${{ github.workspace }}/build/DEBS -type f
-
       - name: Select packages based on condition
         run: |
           # Find files that do not have _debug_ in their name
-          files=$(find ${{ github.workspace }}/build/RPMS ${{ github.workspace }}/build/DEBS -type f | grep -v '_debug_')
-          tar -czvf selected_packages.tar.gz -T $files
+          rpm_files=$(find ${{ github.workspace }}/build/RPMS -type f | grep -v '_debug_')
+          deb_files=$(find ${{ github.workspace }}/build/DEBS -type f | grep -v '_debug_')
+          mkdir -p ${{ github.workspace }}/tmpSelectedPackages
+          cp $rpm_files ${{ github.workspace }}/tmpSelectedPackages/
+          cp $deb_files ${{ github.workspace }}/tmpSelectedPackages/
+
+          tar -czvf selected_packages.tar.gz -C ${{ github.workspace }}/tmpSelectedPackages 
           
       - name: Upload archive as artifact
         uses: actions/upload-artifact@v2
